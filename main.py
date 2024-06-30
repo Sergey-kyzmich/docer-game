@@ -4,12 +4,13 @@ from text import text as class_text
 from extention import extention
 import os
 import game
-
+import database
 text=class_text()
 
 
 
 def start():
+    database.database().create_db()
     e=extention()
     e.clear_cmd()#Очистка командной строки
     #Старт
@@ -20,7 +21,7 @@ def start():
     print(text.description)
 
     kb.add_hotkey("b", show_control)# посмотреть управление
-    kb.add_hotkey("g", game.new_game)#Создание игры
+    kb.add_hotkey("g", game.start_new_game)#Создание игры
     kb.add_hotkey("l", game.start_old_game)#Загрузка игры
 
     kb.wait("s")#Перезапуск описания
