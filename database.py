@@ -1,5 +1,4 @@
 import sqlite3
-import json
 
 class database():
     def __init__(self) -> None:
@@ -9,8 +8,10 @@ class database():
     def add_user(self, user):
         db = sqlite3.connect("database.db")
         cursor = db.cursor()
-        cursor.execute(f'INSERT INTO user VALUES (?,?,?,?)', (user["name"], user["money"], user["level"], user["item"]))
+        cursor.execute(f'INSERT INTO user VALUES (?,?,?)', (user["name"], user["money"], user["level"]))
         db.commit()
+        print(f"add {user}")
+
         db.close()
 
 
@@ -23,19 +24,18 @@ class database():
         CREATE TABLE IF NOT EXISTS user (
         name STRING PRIMARY KEY,
         money INTEGER,
-        level STRING,
-        item STRING
+        level STRING
         )
         ''')
         db.commit()
         db.close()
     
     
-    def edit(self, id, data):
+    def edit(self, data):
         db = sqlite3.connect('database.db')
         cursor = db.cursor()
         for item in data:
-            cursor.execute(f'''UPDATE user SET {item} = '{data[item]}' WHERE name = "{data["name"]}"''')
+            cursor.execute(f'''UPDATE user SET {item} = "{data[item]}" WHERE name = "{data["name"]}"''')
             db.commit()
         db.close()
     
@@ -51,28 +51,10 @@ class database():
     def get_line(self, name):
         db = sqlite3.connect('database.db')
         cursor = db.cursor()
-        res = cursor.execute(f"SELECT * FROM user WHERE name = {name}")
+        res = cursor.execute(f'SELECT * FROM user WHERE name = "{name}"')
         for i in res:
-            if name == "apartment":
-                i[-1]=json.loads(i[-1])
+            
             db.close()
             return i
         
-    def get_column(self,column):
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
-        res = cursor.execute(f"SELECT {column} FROM user")
-        a = []
-        for i in res:
-            a.append(i[0])
-        db.close()
-        return a
-    
-
-    def len_db(self):
-        db = sqlite3.connect('database.db')
-        cursor = db.cursor()
-        a = len(list(cursor.execute(f"SELECT name from user")))
-        db.close()
-        return a
-    
+        
